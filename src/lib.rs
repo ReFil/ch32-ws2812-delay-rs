@@ -30,25 +30,6 @@ where
     }
 
     /// Write a single color for ws2812 devices
-    #[cfg(feature = "slow")]
-    fn write_byte(&mut self, mut data: u8) {
-        for _ in 0..8 {
-            if (data & 0x80) != 0 {
-                self.pin.set_high().ok();
-                self.delay.delay_ns(600);
-                self.pin.set_low().ok();
-                self.delay.delay_ns(600);
-            } else {
-                self.pin.set_high().ok();
-                self.pin.set_low().ok();
-                self.delay.delay_ns(800);
-            }
-            data <<= 1;
-        }
-    }
-
-    /// Write a single color for ws2812 devices
-    #[cfg(not(feature = "slow"))]
     fn write_byte(&mut self, mut data: u8) {
         for _ in 0..8 {
             // We use timings on the shorter side here,
@@ -56,12 +37,12 @@ where
             // and most microcontroller will actually be a bit slower
             if (data & 0x80) != 0 {
                 self.pin.set_high().ok();
-                self.delay.delay_ns(600);
+                self.delay.delay_ns(540);
                 self.pin.set_low().ok();
-                self.delay.delay_ns(600);
+                self.delay.delay_ns(540);
             } else {
                 self.pin.set_high().ok();
-                self.delay.delay_ns(300);
+                self.delay.delay_ns(130);
                 self.pin.set_low().ok();
                 self.delay.delay_ns(800);
             }
